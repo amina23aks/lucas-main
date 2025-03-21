@@ -58,10 +58,7 @@ const UserMenu = () => {
                 </span>
               </div>
               <div className="dropdown-items">
-                <button onClick={() => window.location.href = '/profile'}>
-                  <i className="ri-user-settings-line"></i>
-                  Profile
-                </button>
+              
                 <button onClick={handleLogout} className="logout-btn">
                   <i className="ri-logout-box-line"></i>
                   Disconnect

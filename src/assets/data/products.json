@@ -341,7 +341,7 @@
   },
   {
     "id": "35",
-    "title": "Trianon",
+    "title": "Pistache fleur d'oranger",
     "price": 1200,
     "image01": "/images/product_01.10.jpg",
     "image02": "/images/product_01.9.jpg",
@@ -351,7 +351,7 @@
   },
   {
     "id": "36",
-    "title": "Pistache fleur d'oranger",
+    "title": "Tarte citron",
     "price": 1500,
     "image01": "/images/product_01.11.jpg",
     "image02": "/images/product_01.10.jpg",
@@ -359,16 +359,7 @@
     "category": "Gros-modèles",
     "desc": "Gâteau quatre parts avec biscuit fleur d'oranger, crème pistache, confit d'orange. Décoré de pistaches et écorces d'orange confites."
   },
-  {
-    "id": "37",
-    "title": "Tarte citron",
-    "price": 1500,
-    "image01": "/images/product_01.11.jpg",
-    "image02": "/images/product_01.10.jpg",
-    "image03": "/images/product_01.12.jpg",
-    "category": "Gros-modèles",
-    "desc": "Gâteau quatre parts avec pâte sucrée, crème citron, meringue italienne. Réalisé avec des citrons jaunes bio, décoré de zestes confits."
-  },
+
   {
     "id": "38",
     "title": "Fraisier",
