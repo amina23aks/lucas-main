@@ -1,0 +1,174 @@
+.header {
+  width: 100%;
+  height: 100px;
+  line-height: 100px;
+  background-color: #fff;
+  
+}
+
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+  z-index: 50;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.logo {
+  text-align: left;
+}
+.logo img {
+  width: calc(77% - 60%);
+  object-fit: contain;
+  margin-top: 0px;
+}
+
+.logo h5 {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #212245;
+  margin-top: -40px;
+  margin-bottom: 0;
+}
+
+.menu a {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #212245;
+  transition: 0.3s;
+}
+
+.menu a:hover {
+  color: #c99b10;
+}
+
+.active__menu {
+  color: #c99b10 !important;
+}
+
+.cart__icon i,
+.user i,
+.mobile__menu i,
+.favorite__icon i {
+  font-size: 1.3rem;
+  color: #212245;
+  cursor: pointer;
+}
+
+.cart__icon {
+  position: relative;
+}
+
+.cart__badge {
+  position: absolute;
+  top: 30px;
+  right: -10px;
+  background: #df2020;
+  color: #fff;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  font-size: 0.8rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile__menu {
+  font-weight: 600;
+  display: none;
+}
+
+.header__shrink {
+  position: sticky;
+  top: 0;
+  left: 0;
+  background: #fff;
+  z-index: 99999;
+  box-shadow: 5px 5px 15px -5px #fde4e4;
+}
+
+@media only screen and (max-width: 992px) {
+  .logo img {
+    width: calc(100% - 84%);
+    margin-bottom: -57px;
+  }
+  .logo h5 {
+    font-size: 0.8rem;
+    margin-top: -15px;
+  }
+
+  .navigation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.425);
+    z-index: 99;
+    display: none;
+  }
+   /* side menu mobile verion*/
+  .menu {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 250px;
+    height: 100%;
+    background: #fff;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    line-height: 20px;
+  }
+
+  .menu a {
+    font-size: 0.9rem;
+  }
+
+  .mobile__menu {
+    display: block;
+  }
+
+  .cart__icon i,
+  .user i,
+  .mobile__menu i,
+  .favorite__icon i {
+    font-size: 1rem;
+  }
+
+  .show__menu {
+    display: block;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .header {
+    width: 100%;
+    height: 80px;
+    line-height: 80px;
+  }
+
+  .logo img {
+    margin-top: -70px !important;
+  }
+  .logo h5 {
+    margin-top: -55px;
+  }
+}
+
+.favorite__icon {
+  font-size: 1.5rem;
+  color: #212245;
+  cursor: pointer;
+}
+.favorite__icon:hover a{
+color: red;
+}

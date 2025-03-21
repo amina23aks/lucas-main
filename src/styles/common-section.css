@@ -1,0 +1,12 @@
+.common__section {
+  background: linear-gradient(#9b9dd3b2,#c69a148c),
+    url("");
+
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  padding: 200px 0px;
+}
+.text-white{
+   text-align: center
+}
