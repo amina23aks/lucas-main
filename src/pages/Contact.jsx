@@ -1,9 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles/Contact.css";
 
 const Contact = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [showNotification, setShowNotification] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    // Here you would typically send the form data to your backend
+    console.log("Form submitted:", { name, email, message });
+    
+    // Show notification
+    setShowNotification(true);
+    
+    // Hide notification after 5 seconds
+    setTimeout(() => {
+      setShowNotification(false);
+    }, 5000);
+    
+    // Optionally, reset form fields
+    setName("");
+    setEmail("");
+    setMessage("");
+  };
+
   return (
     <div className="contact-container">
+      {/* Notification Message */}
+      {showNotification && (
+        <div className="notification-message">
+          Message envoyé!.
+        </div>
+      )}
+      
       {/* Right Section (Contact Form) */}
       <div className="contact-form">
         <h2>Contact Us</h2>
@@ -11,17 +43,35 @@ const Contact = () => {
           Hi, need help? Use the form below or email us at{" "}
           <a href="mailto:lucascastello69500@gmail.com">lucascastello69500@gmail.com</a>
         </p>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="input-container">
-            <input type="text" id="name" required />
+            <input 
+              type="text" 
+              id="name" 
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required 
+            />
             <label htmlFor="name">Name</label>
           </div>
           <div className="input-container">
-            <input type="email" id="email" required />
+            <input 
+              type="email" 
+              id="email" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required 
+            />
             <label htmlFor="email">Email</label>
           </div>
           <div className="input-container">
-            <textarea id="message" rows="4" required></textarea>
+            <textarea 
+              id="message" 
+              rows="4" 
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              required
+            ></textarea>
             <label htmlFor="message">Message</label>
           </div>
           <button type="submit">Send Message</button>

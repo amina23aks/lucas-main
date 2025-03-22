@@ -12,7 +12,7 @@
   {
     "id": "02",
     "title": "Tarte mystère noisette",
-    "price": 1500,
+    "price": 150,
     "image01": "/images/product_2.1.jpg",
     "image02": "/images/product_2.2.jpg",
     "image03": "/images/product_2.3.jpg",
@@ -22,7 +22,7 @@
   {
     "id": "03",
     "title": "Tarte mystère chocolat",
-    "price": 1500,
+    "price": 150,
     "image01": "/images/product_2.2.jpg",
     "image02": "/images/product_2.1.jpg",
     "image03": "/images/product_2.3.jpg",
@@ -32,7 +32,7 @@
   {
     "id": "04",
     "title": "Tarte mystère pistache",
-    "price": 1500,
+    "price": 150,
     "image01": "/images/product_2.3.jpg",
     "image02": "/images/product_2.2.jpg",
     "image03": "/images/product_2.1.jpg",
@@ -42,7 +42,7 @@
   {
     "id": "05",
     "title": "Pistache chocolat",
-    "price": 1500,
+    "price": 150,
     "image01": "/images/product_01.jpg",
     "image02": "/images/product_01.3.jpg",
     "image03": "/images/product_01.2.jpg",
@@ -52,7 +52,7 @@
   {
     "id": "06",
     "title": "Pistache fleur d'oranger",
-    "price": 1500,
+    "price": 150,
     "image01": "/images/product_01.2.jpg",
     "image02": "/images/product_01.3.jpg",
     "image03": "/images/product_01.jpg",
