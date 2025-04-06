@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 
-import Helmet from "../components/Helmet/Helmet.js";
 import { Container, Row, Col, ListGroup, ListGroupItem } from "reactstrap";
 
 import heroImg from "../assets/images/lucas-hero.png";
@@ -62,7 +61,7 @@ const Home = () => {
   };
 
   return (
-    <Helmet title="Home">
+    <div title="Home">
       <section>
         <Container>
           <Row>
@@ -257,7 +256,7 @@ const Home = () => {
           </Row>
         </Container>
       </section>
-    </Helmet>
+    </div>
   );
 };
 
