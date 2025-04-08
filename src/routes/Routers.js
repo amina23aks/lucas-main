@@ -10,11 +10,19 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import About from "../pages/About"
 import Favorite from "../pages/Favorite";
+import AdminLayout from '../components/Layout/AdminLayout.jsx';
+import AdminDashboard from '../pages/AdminDashboard';
+import AdminMessages from '../pages/AdminMessages';
+import MyOrders from "../pages/MyOrders"; 
+import AdminProducts from "../pages/AdminProducts";
+import AdminComments from "pages/AdminComments";
+
 
 
 const Routers = () => {
   return (
     <Routes>
+   
       <Route path="/" element={<Navigate to="/home" />} />
       <Route path="/home" element={<Home />} />
       <Route path="/Menu" element={<AllFoods />} />
@@ -25,6 +33,16 @@ const Routers = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/contact" element={<Contact />} />
+      <Route path="/admin" element={<AdminLayout />}>
+  <Route index element={<AdminDashboard />} />
+  <Route path="messages" element={<AdminMessages />} />
+  <Route path="/admin/my-orders" element={<MyOrders />} /> 
+  <Route path="/admin/products" element={<AdminProducts />} />
+  <Route path="/admin/comments" element={<AdminComments />} />
+
+</Route>
+
+
     </Routes>
   );
 };

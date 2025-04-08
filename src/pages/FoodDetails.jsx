@@ -1,188 +1,212 @@
 import React, { useState, useEffect } from "react";
-import products from "../assets/data/products.json";
-
+import defaultProducts from "../assets/data/products.json";
 import { useParams } from "react-router-dom";
-
 import { Container, Row, Col } from "reactstrap";
-
 import { useDispatch } from "react-redux";
 import { cartActions } from "../store/shopping-cart/cartSlice";
-import { favoritesActions } from "../store/favoritesSlice"; // Import favorites actions
-
+import { favoritesActions } from "../store/favoritesSlice";
 import "../styles/product-details.css";
 import ProductCard from "../components/UI/product-card/ProductCard";
 
 const FoodDetails = () => {
+  const [product, setProduct] = useState(null);
+  const [previewImg, setPreviewImg] = useState("");
   const [tab, setTab] = useState("desc");
   const [enteredName, setEnteredName] = useState("");
   const [enteredEmail, setEnteredEmail] = useState("");
   const [reviewMsg, setReviewMsg] = useState("");
-
-  const { id } = useParams();
   const dispatch = useDispatch();
-
-  const product = products.find((product) => product.id === id);
-  const [previewImg, setPreviewImg] = useState(product.image01);
-  const { title, price, category, desc, image01 } = product;
-
-  const relatedProduct = products.filter((item) => category === item.category);
-
-  const addToCart = () => {
-    dispatch(
-      cartActions.addItem({
-        id,
-        title,
-        price,
-        image01,
-      })
-    );
-  };
-
-  const toggleFavorite = () => {
-    dispatch(
-      favoritesActions.addFavorite({
-        id,
-        title,
-        price,
-        image01,
-      })
-    );
-  };
-
-  const submitHandler = (e) => {
-    e.preventDefault();
-    console.log(enteredName, enteredEmail, reviewMsg);
-  };
+  const { id } = useParams();
 
   useEffect(() => {
-    setPreviewImg(product.image01);
-  }, [product]);
+    const localData = JSON.parse(localStorage.getItem("products")) || [];
+    const combined = [...defaultProducts, ...localData];
+    const found = combined.find((p) => String(p.id) === String(id));
+    setProduct(found);
+
+    if (found) {
+      setPreviewImg(found.image01);
+    }
+  }, [id]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [product]);
 
+  if (!product) {
+    return (
+      <Container className="text-center py-5">
+        <h2>Produit non trouvé ❌</h2>
+        <p>Le produit demandé n'existe pas ou a été supprimé.</p>
+      </Container>
+    );
+  }
+
+  const {
+    title,
+    price,
+    category,
+    image01,
+    image02,
+    image03,
+  } = product;
+
+  const description = product.description || product.desc || "Pas de description.";
+
+  const addToCart = () => {
+    dispatch(cartActions.addItem({ id, title, price, image01 }));
+  };
+
+  const toggleFavorite = () => {
+    dispatch(favoritesActions.addFavorite({ id, title, price, image01 }));
+  };
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+
+    const comment = {
+      id: Date.now(),
+      productId: product.id,
+      productName: product.title,
+      name: enteredName,
+      email: enteredEmail,
+      message: reviewMsg,
+      created_at: new Date().toISOString(),
+    };
+
+    const existing = JSON.parse(localStorage.getItem("comments")) || [];
+    existing.push(comment);
+    localStorage.setItem("comments", JSON.stringify(existing));
+
+    // Reset fields
+    setEnteredName("");
+    setEnteredEmail("");
+    setReviewMsg("");
+  };
+
+  const relatedProduct = defaultProducts.filter(
+    (item) => item.category === category && item.id !== id
+  );
+
   return (
-    
-      <section>
-        <Container>
-          <Row>
-            <Col lg="2" md="2">
-              <div className="product__images">
-                <div
-                  className="img__item mb-3"
-                  onClick={() => setPreviewImg(product.image01)}
-                >
-                  <img src={product.image01} alt="" className="w-50" />
-                </div>
-                <div
-                  className="img__item mb-3"
-                  onClick={() => setPreviewImg(product.image02)}
-                >
-                  <img src={product.image02} alt="" className="w-50" />
-                </div>
-                <div
-                  className="img__item"
-                  onClick={() => setPreviewImg(product.image03)}
-                >
-                  <img src={product.image03} alt="" className="w-50" />
-                </div>
-              </div>
-            </Col>
-
-            <Col lg="4" md="4">
-              <div className="product__main-img">
-                <img src={previewImg} alt="" className="w-100" />
-              </div>
-            </Col>
-
-            <Col lg="6" md="6">
-              <div className="single__product-content">
-                <h2 className="product__title mb-3">{title}</h2>
-                <p className="product__price">
-                  Price: <span>{price}DA</span>
-                </p>
-                <p className="category mb-5">
-                  Category: <span>{category}</span>
-                </p>
-                <div className="d-flex align-items-center gap-3">
-                  <button className="favorite-btnD" onClick={toggleFavorite}>
-                    <i className="ri-heart-add-line"></i> Add to Favorites
-                  </button>
-                  <button className="addTOCart__btnD" onClick={addToCart}>
-                    <i className="ri-shopping-cart-line"></i> Add to Cart
-                  </button>
-                </div>
-              </div>
-            </Col>
-
-            <Col lg="12">
-              <div className="tabs d-flex align-items-center gap-5 py-3">
-                <h6
-                  className={`${tab === "desc" ? "tab__active" : ""}`}
-                  onClick={() => setTab("desc")}
-                >
-                  Description
-                </h6>
-                <h6
-                  className={`${tab === "rev" ? "tab__active" : ""}`}
-                  onClick={() => setTab("rev")}
-                >
-                  Review
-                </h6>
-              </div>
-
-              {tab === "desc" ? (
-                <div className="tab__content">
-                  <p>{desc}</p>
-                </div>
-              ) : (
-                <div className="tab__form mb-3">
-                  <form className="form" onSubmit={submitHandler}>
-                    <div className="form__group">
-                      <input
-                        type="text"
-                        placeholder="Enter your name"
-                        onChange={(e) => setEnteredName(e.target.value)}
-                        required
-                      />
-                    </div>
-                    <div className="form__group">
-                      <input
-                        type="email"
-                        placeholder="Enter your email"
-                        onChange={(e) => setEnteredEmail(e.target.value)}
-                        required
-                      />
-                    </div>
-                    <div className="form__group">
-                      <textarea
-                        rows={5}
-                        placeholder="Write your review"
-                        onChange={(e) => setReviewMsg(e.target.value)}
-                        required
-                      />
-                    </div>
-                    <button type="submit" className="submit">
-                      Submit
-                    </button>
-                  </form>
+    <section>
+      <Container>
+        <Row>
+          {/* Image thumbnails */}
+          <Col lg="2" md="2">
+            <div className="product__images">
+              {image01 && (
+                <div className="img__item mb-3" onClick={() => setPreviewImg(image01)}>
+                  <img src={image01} alt="" className="w-50" />
                 </div>
               )}
-            </Col>
+              {image02 && (
+                <div className="img__item mb-3" onClick={() => setPreviewImg(image02)}>
+                  <img src={image02} alt="" className="w-50" />
+                </div>
+              )}
+              {image03 && (
+                <div className="img__item" onClick={() => setPreviewImg(image03)}>
+                  <img src={image03} alt="" className="w-50" />
+                </div>
+              )}
+            </div>
+          </Col>
 
-            <Col lg="12" className="mb-5 mt-4">
-              <h2 className="related__Product-title">You might also like</h2>
+          {/* Main image */}
+          <Col lg="4" md="4">
+            <div className="product__main-img">
+              <img src={previewImg} alt="" className="w-100" />
+            </div>
+          </Col>
+
+          {/* Product info */}
+          <Col lg="6" md="6">
+            <div className="single__product-content">
+              <h2 className="product__title mb-3">{title}</h2>
+              <p className="product__price">
+                Prix: <span>{price} DA</span>
+              </p>
+              <p className="category mb-5">
+                Catégorie: <span>{category}</span>
+              </p>
+              <div className="d-flex align-items-center gap-3">
+                <button className="favorite-btnD" onClick={toggleFavorite}>
+                  <i className="ri-heart-add-line"></i> Favori
+                </button>
+                <button className="addTOCart__btnD" onClick={addToCart}>
+                  <i className="ri-shopping-cart-line"></i> Ajouter au panier
+                </button>
+              </div>
+            </div>
+          </Col>
+
+          {/* Tabs */}
+          <Col lg="12">
+            <div className="tabs d-flex align-items-center gap-5 py-3">
+              <h6 className={tab === "desc" ? "tab__active" : ""} onClick={() => setTab("desc")}>
+                Description
+              </h6>
+              <h6 className={tab === "rev" ? "tab__active" : ""} onClick={() => setTab("rev")}>
+                Avis
+              </h6>
+            </div>
+
+            {tab === "desc" ? (
+              <div className="tab__content">
+                <p>{description}</p>
+              </div>
+            ) : (
+              <div className="tab__form mb-3">
+                <form className="form" onSubmit={submitHandler}>
+                  <div className="form__group">
+                    <input
+                      type="text"
+                      placeholder="Nom"
+                      value={enteredName}
+                      onChange={(e) => setEnteredName(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="form__group">
+                    <input
+                      type="email"
+                      placeholder="Email"
+                      value={enteredEmail}
+                      onChange={(e) => setEnteredEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="form__group">
+                    <textarea
+                      rows={5}
+                      placeholder="Votre avis"
+                      value={reviewMsg}
+                      onChange={(e) => setReviewMsg(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <button type="submit" className="submit">
+                    Envoyer
+                  </button>
+                </form>
+              </div>
+            )}
+          </Col>
+
+          {/* Related products */}
+          <Col lg="12" className="mb-5 mt-4">
+            <h2 className="related__Product-title">Vous aimerez aussi</h2>
+          </Col>
+
+          {relatedProduct.map((item) => (
+            <Col lg="3" md="4" sm="6" xs="6" className="mb-4" key={item.id}>
+              <ProductCard item={item} />
             </Col>
-            {relatedProduct.map((item) => (
-              <Col lg="3" md="4" sm="6" xs="6" className="mb-4" key={item.id}>
-                <ProductCard item={item} />
-              </Col>
-            ))}
-          </Row>
-        </Container>
-      </section>
-  
+          ))}
+        </Row>
+      </Container>
+    </section>
   );
 };
 

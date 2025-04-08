@@ -9,19 +9,21 @@ const Contact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // Here you would typically send the form data to your backend
-    console.log("Form submitted:", { name, email, message });
-    
-    // Show notification
+
+    const newMessage = {
+      id: Date.now(),
+      name,
+      email,
+      message,
+      created_at: new Date().toISOString(),
+    };
+
+    const existing = JSON.parse(localStorage.getItem("messages")) || [];
+    localStorage.setItem("messages", JSON.stringify([...existing, newMessage]));
+
     setShowNotification(true);
-    
-    // Hide notification after 5 seconds
-    setTimeout(() => {
-      setShowNotification(false);
-    }, 5000);
-    
-    // Optionally, reset form fields
+    setTimeout(() => setShowNotification(false), 5000);
+
     setName("");
     setEmail("");
     setMessage("");
@@ -29,56 +31,56 @@ const Contact = () => {
 
   return (
     <div className="contact-container">
-      {/* Notification Message */}
+      {/* Notification */}
       {showNotification && (
-        <div className="notification-message">
-          Message envoyé!.
-        </div>
+        <div className="notification-message">Message envoyé !</div>
       )}
-      
-      {/* Right Section (Contact Form) */}
+
+      {/* Contact Form */}
       <div className="contact-form">
-        <h2>Contact Us</h2>
+        <h2>Contactez-nous</h2>
         <p>
-          Hi, need help? Use the form below or email us at{" "}
-          <a href="mailto:lucascastello69500@gmail.com">lucascastello69500@gmail.com</a>
+          Besoin d’aide ? Remplissez le formulaire ou écrivez-nous à{" "}
+          <a href="mailto:lucascastello69500@gmail.com">
+            lucascastello69500@gmail.com
+          </a>
         </p>
         <form onSubmit={handleSubmit}>
           <div className="input-container">
-            <input 
-              type="text" 
-              id="name" 
+            <input
+              type="text"
+              id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              required 
+              required
             />
-            <label htmlFor="name">Name</label>
+            <label htmlFor="name">Nom</label>
           </div>
           <div className="input-container">
-            <input 
-              type="email" 
-              id="email" 
+            <input
+              type="email"
+              id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required 
+              required
             />
             <label htmlFor="email">Email</label>
           </div>
           <div className="input-container">
-            <textarea 
-              id="message" 
-              rows="4" 
+            <textarea
+              id="message"
+              rows="4"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               required
             ></textarea>
             <label htmlFor="message">Message</label>
           </div>
-          <button type="submit">Send Message</button>
+          <button type="submit">Envoyer</button>
         </form>
       </div>
 
-      {/* Left Section (Map) */}
+      {/* Map */}
       <div className="contact-map">
         <iframe
           title="Luca Castello Location"
