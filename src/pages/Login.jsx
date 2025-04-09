@@ -1,12 +1,14 @@
-// src/pages/Login.jsx
 import React, { useRef, useState } from 'react';
 import { useAuth } from '../components/AuthContext/AuthContext.jsx';
+import { useDispatch } from 'react-redux';
+import { cartActions } from '../store/shopping-cart/cartSlice.js';
 import '../styles/Login.css';
 
 const Login = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
   const { login } = useAuth();
+  const dispatch = useDispatch();
 
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -37,9 +39,19 @@ const Login = () => {
       return;
     }
 
-    // Everything OK
+    // ✅ Login successful
     setError("");
-    login({ email, password });
+    localStorage.setItem("currentUser", JSON.stringify(userFound)); // ✅ Store current user
+    login({ email, password }); // ✅ Log in the user (context)
+
+    // ✅ Load user's cart from localStorage
+    const userCart = JSON.parse(localStorage.getItem(`cart_${userFound.email}`)) || {
+      items: [],
+      totalAmount: 0,
+      totalQuantity: 0,
+    };
+
+    dispatch(cartActions.setCart(userCart)); // ✅ Update Redux with user's cart
   };
 
   return (
@@ -94,7 +106,7 @@ const Login = () => {
         <p className="register-link">
           Pas encore inscrit ?{" "}
           <a href="/register" className="link">
-          registre
+            registre
           </a>
         </p>
       </div>
