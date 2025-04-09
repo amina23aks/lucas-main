@@ -1,3 +1,10 @@
+.error-message {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+
 .single__product-content {
   padding-left: 50px;
 }

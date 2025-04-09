@@ -5,6 +5,7 @@ import { Container, Row, Col } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { cartActions } from "../store/shopping-cart/cartSlice";
 import { favoritesActions } from "../store/favoritesSlice";
+import { useAuth } from "../components/AuthContext/AuthContext"; // ✅ Auth context
 import "../styles/product-details.css";
 import ProductCard from "../components/UI/product-card/ProductCard";
 
@@ -15,8 +16,12 @@ const FoodDetails = () => {
   const [enteredName, setEnteredName] = useState("");
   const [enteredEmail, setEnteredEmail] = useState("");
   const [reviewMsg, setReviewMsg] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [notLoggedInError, setNotLoggedInError] = useState("");
+
   const dispatch = useDispatch();
   const { id } = useParams();
+  const { user } = useAuth(); // ✅ Auth info
 
   useEffect(() => {
     const localData = JSON.parse(localStorage.getItem("products")) || [];
@@ -42,15 +47,7 @@ const FoodDetails = () => {
     );
   }
 
-  const {
-    title,
-    price,
-    category,
-    image01,
-    image02,
-    image03,
-  } = product;
-
+  const { title, price, category, image01, image02, image03 } = product;
   const description = product.description || product.desc || "Pas de description.";
 
   const addToCart = () => {
@@ -64,6 +61,19 @@ const FoodDetails = () => {
   const submitHandler = (e) => {
     e.preventDefault();
 
+    if (!user) {
+      setNotLoggedInError("❌ Veuillez vous connecter pour laisser un avis.");
+      return;
+    }
+
+    if (enteredEmail !== user.email) {
+      setEmailError("❌ Cet email ne correspond pas à votre compte.");
+      return;
+    }
+
+    setEmailError("");
+    setNotLoggedInError("");
+
     const comment = {
       id: Date.now(),
       productId: product.id,
@@ -75,10 +85,9 @@ const FoodDetails = () => {
     };
 
     const existing = JSON.parse(localStorage.getItem("comments")) || [];
-    existing.push(comment);
-    localStorage.setItem("comments", JSON.stringify(existing));
+    localStorage.setItem("comments", JSON.stringify([...existing, comment]));
 
-    // Reset fields
+    // Clear form
     setEnteredName("");
     setEnteredEmail("");
     setReviewMsg("");
@@ -92,7 +101,7 @@ const FoodDetails = () => {
     <section>
       <Container>
         <Row>
-          {/* Image thumbnails */}
+          {/* Thumbnails */}
           <Col lg="2" md="2">
             <div className="product__images">
               {image01 && (
@@ -120,7 +129,7 @@ const FoodDetails = () => {
             </div>
           </Col>
 
-          {/* Product info */}
+          {/* Info */}
           <Col lg="6" md="6">
             <div className="single__product-content">
               <h2 className="product__title mb-3">{title}</h2>
@@ -176,6 +185,9 @@ const FoodDetails = () => {
                       onChange={(e) => setEnteredEmail(e.target.value)}
                       required
                     />
+                    {emailError && (
+                      <p className="error-message">{emailError}</p>
+                    )}
                   </div>
                   <div className="form__group">
                     <textarea
@@ -186,6 +198,11 @@ const FoodDetails = () => {
                       required
                     />
                   </div>
+
+                  {notLoggedInError && (
+                    <p className="error-message">{notLoggedInError}</p>
+                  )}
+
                   <button type="submit" className="submit">
                     Envoyer
                   </button>
@@ -194,7 +211,7 @@ const FoodDetails = () => {
             )}
           </Col>
 
-          {/* Related products */}
+          {/* Related */}
           <Col lg="12" className="mb-5 mt-4">
             <h2 className="related__Product-title">Vous aimerez aussi</h2>
           </Col>

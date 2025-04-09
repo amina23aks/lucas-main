@@ -57,7 +57,7 @@ const MyOrders = () => {
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold mb-6">📦 Mes Commandes</h2>
+      <h2 className="text-2xl font-bold mb-6">📦 Commandes</h2>
 
       {orders.length === 0 ? (
         <p className="text-gray-500">Aucune commande trouvée.</p>

@@ -1,4 +1,24 @@
 /* General Styles */
+.password-field {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  top: 30%;
+  right: 10px;
+  cursor: pointer;
+  color: #555;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: -5px;
+  margin-bottom: 5px;
+}
+
+
 body {
   margin: 0;
   font-family: Arial, sans-serif;

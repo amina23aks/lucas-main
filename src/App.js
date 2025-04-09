@@ -1,7 +1,7 @@
 // src/App.jsx
 import React, { useEffect } from 'react';
 import Layout from "./components/Layout/Layout";
-import { AuthProvider } from './components/AuthContext/AuthContext.jsx';
+import { AuthProvider } from './components/AuthContext/AuthContext';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 

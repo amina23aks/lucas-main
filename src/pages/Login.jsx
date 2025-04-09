@@ -1,5 +1,5 @@
-// src/components/Login.jsx
-import React, { useRef } from 'react';
+// src/pages/Login.jsx
+import React, { useRef, useState } from 'react';
 import { useAuth } from '../components/AuthContext/AuthContext.jsx';
 import '../styles/Login.css';
 
@@ -8,24 +8,46 @@ const Login = () => {
   const passwordRef = useRef();
   const { login } = useAuth();
 
+  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
   const submitHandler = (e) => {
     e.preventDefault();
-    
-    // Simulate authentication
-    const userData = {
-      email: emailRef.current.value,
-      name: emailRef.current.value.split('@')[0], // Simple example using email as name
-    };
-    
-    login(userData);
-    window.location.href = '/'; // Redirect to home
+
+    const email = emailRef.current.value.trim();
+    const password = passwordRef.current.value.trim();
+
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+
+    // Admin shortcut login
+    if (email === "aksouh23zerrouki@gmail.com" && password === "dash0823") {
+      login({ email, password });
+      return;
+    }
+
+    const userFound = users.find((u) => u.email === email);
+
+    if (!userFound) {
+      setError("❌ Ce compte n'existe pas. Veuillez vous inscrire.");
+      return;
+    }
+
+    if (userFound.password !== password) {
+      setError("❌ Mot de passe incorrect.");
+      return;
+    }
+
+    // Everything OK
+    setError("");
+    login({ email, password });
   };
 
   return (
     <div className="login-container">
       <div className="login-form">
-        <h2>Login</h2>
-        <p>Welcome back! Please login to your account.</p>
+        <h2>Connexion</h2>
+        <p>Veuillez entrer vos informations de connexion.</p>
+
         <form onSubmit={submitHandler}>
           <div className="input-container">
             <input
@@ -33,24 +55,46 @@ const Login = () => {
               id="email"
               required
               ref={emailRef}
+              placeholder="Email"
             />
             <label htmlFor="email">Email</label>
           </div>
-          <div className="input-container">
+
+          <div className="input-container password-field">
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               id="password"
               required
               ref={passwordRef}
+              placeholder="Mot de passe"
             />
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">Mot de passe</label>
+            <span
+              className="toggle-password"
+              onClick={() => setShowPassword((prev) => !prev)}
+            >
+              <i className={showPassword ? "ri-eye-off-line" : "ri-eye-line"}></i>
+            </span>
           </div>
-          <button type="submit">Login</button>
+
+          {error && (
+            <>
+              <p className="error-message">{error}</p>
+              {error.includes("compte") && (
+                <p className="register-suggestion">
+                  <a href="/register">Créer un compte ici</a>
+                </p>
+              )}
+            </>
+          )}
+
+          <button type="submit">Se connecter</button>
         </form>
+
         <p className="register-link">
-          Don't have an account?{" "}
+          Pas encore inscrit ?{" "}
           <a href="/register" className="link">
-            Register
+            Créer un compte
           </a>
         </p>
       </div>

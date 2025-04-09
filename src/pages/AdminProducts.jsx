@@ -13,6 +13,7 @@ const AdminProducts = () => {
     description: "",
   });
   const [editingId, setEditingId] = useState(null);
+  const [notification, setNotification] = useState("");
 
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("products")) || [];
@@ -41,7 +42,6 @@ const AdminProducts = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     if (!form.title || !form.price || !form.category || !form.image01) return;
 
     if (editingId !== null) {
@@ -50,10 +50,16 @@ const AdminProducts = () => {
       );
       saveToStorage(updated);
       setEditingId(null);
+      setNotification("Produit mis à jour avec succès !");
     } else {
       const newProduct = { ...form, id: Date.now() };
       saveToStorage([...products, newProduct]);
+      setNotification("Produit ajouté avec succès !");
     }
+
+    setTimeout(() => {
+      setNotification("");
+    }, 3000);
 
     setForm({
       id: null,
@@ -80,7 +86,23 @@ const AdminProducts = () => {
     <div>
       <h2 className="text-2xl font-bold mb-6">Gérer Produits</h2>
 
-      {/* Formulaire de création/modification */}
+      {/* ✅ Notification */}
+      {notification && (
+        <div
+          style={{
+            backgroundColor: "#d1e7dd",
+            color: "#0f5132",
+            padding: "10px 16px",
+            borderRadius: "8px",
+            marginBottom: "1rem",
+            border: "1px solid #badbcc",
+          }}
+        >
+          {notification}
+        </div>
+      )}
+
+      {/* Product Form */}
       <form onSubmit={handleSubmit} className="contact-form" style={{ marginBottom: "2rem" }}>
         {/* Title */}
         <div className="input-container">
@@ -118,13 +140,9 @@ const AdminProducts = () => {
           <label>Image</label>
         </div>
 
-        {/* Image Preview */}
+        {/* Preview */}
         {form.image01 && (
-          <img
-            src={form.image01}
-            alt="Preview"
-            className="w-24 h-24 object-cover rounded mb-3"
-          />
+          <img src={form.image01} alt="Preview" className="w-24 h-24 object-cover rounded mb-3" />
         )}
 
         {/* Description */}
@@ -139,7 +157,6 @@ const AdminProducts = () => {
           <label>Description</label>
         </div>
 
-        {/* Submit Button - Green & Rounded */}
         <button
           type="submit"
           style={{
@@ -154,7 +171,7 @@ const AdminProducts = () => {
         </button>
       </form>
 
-      {/* Product Cards */}
+      {/* Product List (no filter) */}
       {products.length === 0 ? (
         <p className="text-gray-500">Aucun produit trouvé.</p>
       ) : (
@@ -173,12 +190,11 @@ const AdminProducts = () => {
               <p className="text-gray-600">{product.price} DA</p>
               <p className="text-sm text-gray-500 mb-2">{product.category}</p>
 
-              {/* Modifier + Supprimer Buttons */}
               <div className="flex justify-center gap-3 mt-2">
                 <button
                   onClick={() => handleEdit(product)}
                   style={{
-                    backgroundColor: "#facc15", // Yellow
+                    backgroundColor: "#facc15",
                     border: "none",
                     borderRadius: "20px",
                     padding: "8px 16px",
@@ -190,7 +206,7 @@ const AdminProducts = () => {
                 <button
                   onClick={() => handleDelete(product.id)}
                   style={{
-                    backgroundColor: "#ef4444", // Red
+                    backgroundColor: "#ef4444",
                     border: "none",
                     borderRadius: "20px",
                     padding: "8px 16px",

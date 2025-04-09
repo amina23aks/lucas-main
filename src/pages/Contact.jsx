@@ -1,14 +1,27 @@
 import React, { useState } from "react";
 import "../styles/Contact.css";
+import { useAuth } from "../components/AuthContext/AuthContext";
 
 const Contact = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [showNotification, setShowNotification] = useState(false);
+  const [notification, setNotification] = useState(null);
+
+  const { user } = useAuth();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!user) {
+      setNotification("❌ Vous devez être connecté pour envoyer un message.");
+      return;
+    }
+
+    if (email !== user.email) {
+      setNotification("❌ L'email ne correspond pas à votre compte.");
+      return;
+    }
 
     const newMessage = {
       id: Date.now(),
@@ -21,8 +34,8 @@ const Contact = () => {
     const existing = JSON.parse(localStorage.getItem("messages")) || [];
     localStorage.setItem("messages", JSON.stringify([...existing, newMessage]));
 
-    setShowNotification(true);
-    setTimeout(() => setShowNotification(false), 5000);
+    setNotification("✅ Message envoyé avec succès !");
+    setTimeout(() => setNotification(null), 4000);
 
     setName("");
     setEmail("");
@@ -31,10 +44,8 @@ const Contact = () => {
 
   return (
     <div className="contact-container">
-      {/* Notification */}
-      {showNotification && (
-        <div className="notification-message">Message envoyé !</div>
-      )}
+      {/* ✅ Top Notification */}
+      {notification && <div className="top-notification">{notification}</div>}
 
       {/* Contact Form */}
       <div className="contact-form">
@@ -80,7 +91,7 @@ const Contact = () => {
         </form>
       </div>
 
-      {/* Map */}
+      {/* Map stays untouched */}
       <div className="contact-map">
         <iframe
           title="Luca Castello Location"

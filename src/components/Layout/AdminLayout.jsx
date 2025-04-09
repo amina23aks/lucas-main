@@ -13,10 +13,14 @@ const AdminLayout = () => {
         <h2 className="text-xl font-bold mb-6">Admin Panel</h2>
         <nav className="flex flex-col gap-3 text-sm font-medium">
           <Link to="/admin" className="hover:text-primary">Dashboard</Link>
-          <Link to="/admin/products" className="hover:text-primary">Gérer Produits</Link>
-          <Link to="/admin/messages" className="hover:text-primary">Contact Messages</Link>
-          <Link to="/admin/my-orders" className="hover:text-primary">My Orders</Link>
-          <Link to="/admin/comments" className="hover:text-primary">Gérer Commentaires</Link>
+          <Link to="/admin/products" className="hover:text-primary">Gérer les Produits</Link>
+          <Link to="/admin/my-orders" className="hover:text-primary">Gérer les Commandes</Link>
+          <Link to="/admin/messages" className="hover:text-primary">Gérer les Messages </Link>
+          <Link to="/admin/comments" className="hover:text-primary">Gérer les Commentaires</Link>
+          <Link to="/admin/favorites" className="hover:text-primary">
+                Favoris des Clients
+          </Link>
+
 
           {/* 🔴 Styled Logout Button */}
           <button
@@ -31,7 +35,7 @@ const AdminLayout = () => {
       {/* Main Content */}
       <main className="flex-1 p-6">
         <header className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-semibold">Welcome, {user?.name}</h1>
+          <h1 className="text-2xl font-semibold">Bienvenue, {user?.name}</h1>
         </header>
 
         <div className="bg-white p-6 rounded-xl shadow-md">

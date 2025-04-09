@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Container, Row, Col, Alert } from "reactstrap";
+import { useAuth } from "../components/AuthContext/AuthContext.jsx"; // ✅ import auth context
 import "../styles/checkout.css";
 
 const Checkout = () => {
@@ -9,6 +10,9 @@ const Checkout = () => {
   const [enterNumber, setEnterNumber] = useState("");
   const [enterCity, setEnterCity] = useState("");
   const [showNotification, setShowNotification] = useState(false);
+  const [emailError, setEmailError] = useState("");
+
+  const { user } = useAuth(); // ✅ get current user
 
   const cartItems = useSelector((state) => state.cart.cartItems);
   const cartTotalAmount = useSelector((state) => state.cart.totalAmount);
@@ -17,6 +21,18 @@ const Checkout = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
+
+    if (!user) {
+      setEmailError("❌ Vous devez être connecté pour commander.");
+      return;
+    }
+
+    if (enterEmail !== user.email) {
+      setEmailError("❌ L'email ne correspond pas à votre compte.");
+      return;
+    }
+
+    setEmailError("");
 
     const order = {
       id: Date.now(),
@@ -36,6 +52,10 @@ const Checkout = () => {
     localStorage.setItem("orders", JSON.stringify(existingOrders));
 
     setShowNotification(true);
+    setEnterName("");
+    setEnterEmail("");
+    setEnterNumber("");
+    setEnterCity("");
   };
 
   return (
@@ -44,7 +64,7 @@ const Checkout = () => {
         {showNotification && (
           <Row className="mb-4">
             <Col>
-              <Alert color="success">Commande effectuée</Alert>
+              <Alert color="success">✅ Commande effectuée !</Alert>
             </Col>
           </Row>
         )}
@@ -59,6 +79,7 @@ const Checkout = () => {
                   type="text"
                   placeholder="Enter your name"
                   required
+                  value={enterName}
                   onChange={(e) => setEnterName(e.target.value)}
                 />
               </div>
@@ -67,14 +88,17 @@ const Checkout = () => {
                   type="email"
                   placeholder="Enter your email"
                   required
+                  value={enterEmail}
                   onChange={(e) => setEnterEmail(e.target.value)}
                 />
+                {emailError && <p className="error-message">{emailError}</p>}
               </div>
               <div className="form__group">
                 <input
                   type="number"
                   placeholder="Phone number"
                   required
+                  value={enterNumber}
                   onChange={(e) => setEnterNumber(e.target.value)}
                 />
               </div>
@@ -83,6 +107,7 @@ const Checkout = () => {
                   type="text"
                   placeholder="City"
                   required
+                  value={enterCity}
                   onChange={(e) => setEnterCity(e.target.value)}
                 />
               </div>
