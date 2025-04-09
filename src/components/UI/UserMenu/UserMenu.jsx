@@ -1,21 +1,17 @@
-// src/components/UI/user-menu/UserMenu.jsx
 import React, { useState, useRef, useEffect } from 'react';
+import { useAuth } from '../../AuthContext/AuthContext';
 import './../../../styles/user-menu.css';
 
 const UserMenu = () => {
+  const { user, logout } = useAuth(); // ✅ Use context instead of sessionStorage
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Check if user is logged in when component mounts
-  useEffect(() => {
-    const user = localStorage.getItem('user');
-    if (user) {
-      setIsLoggedIn(true);
-    }
-  }, []);
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
 
-  // Handle click outside dropdown to close it
+  // ✅ Close dropdown if clicked outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -27,21 +23,6 @@ const UserMenu = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('user');
-    setIsLoggedIn(false);
-    setIsDropdownOpen(false);
-    window.location.href = '/login';
-  };
-
-  const navigateToLogin = () => {
-    window.location.href = '/login';
-  };
-
   return (
     <div className="user-menu" ref={dropdownRef}>
       <span className="user-icon" onClick={toggleDropdown}>
@@ -50,16 +31,15 @@ const UserMenu = () => {
 
       {isDropdownOpen && (
         <div className="dropdown-content">
-          {isLoggedIn ? (
+          {user ? (
             <>
               <div className="user-info">
                 <span className="welcome-text">
-                  Welcome, {JSON.parse(localStorage.getItem('user'))?.name || 'User'}
+                  Welcome, {user.name}
                 </span>
               </div>
               <div className="dropdown-items">
-              
-                <button onClick={handleLogout} className="logout-btn">
+                <button onClick={logout} className="logout-btn">
                   <i className="ri-logout-box-line"></i>
                   Disconnect
                 </button>
@@ -67,11 +47,11 @@ const UserMenu = () => {
             </>
           ) : (
             <div className="dropdown-items">
-              <button onClick={navigateToLogin}>
+              <button onClick={() => (window.location.href = '/login')}>
                 <i className="ri-login-box-line"></i>
                 Login
               </button>
-              <button onClick={() => window.location.href = '/register'}>
+              <button onClick={() => (window.location.href = '/register')}>
                 <i className="ri-user-add-line"></i>
                 Register
               </button>

@@ -1,32 +1,31 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-} from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { favoritesActions } from "../../store/favoritesSlice"; // adjust path as needed
+import { favoritesActions } from "../../store/favoritesSlice";
 
-// ✅ Define constants
 export const AuthContext = createContext();
+
 const ADMIN_EMAIL = "aksouh23zerrouki@gmail.com";
 const ADMIN_PASSWORD = "dash0823";
 const ADMIN_NAME = "zerrouki, aksouh";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  // ✅ Restore session user on app load
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
+    const storedUser = JSON.parse(sessionStorage.getItem("user"));
     if (storedUser) {
       setUser(storedUser);
-      dispatch(favoritesActions.setUser(storedUser.email)); // Load favorites for user
+      dispatch(favoritesActions.setUser(storedUser.email));
     }
+    setLoading(false);
   }, [dispatch]);
 
+  // ✅ Login function
   const login = ({ email, password }) => {
     if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
       const adminUser = {
@@ -34,7 +33,7 @@ export const AuthProvider = ({ children }) => {
         name: ADMIN_NAME,
         isAdmin: true,
       };
-      localStorage.setItem("user", JSON.stringify(adminUser));
+      sessionStorage.setItem("user", JSON.stringify(adminUser));
       setUser(adminUser);
       dispatch(favoritesActions.setUser(email));
       navigate("/admin");
@@ -52,7 +51,7 @@ export const AuthProvider = ({ children }) => {
         name: foundUser.name,
         isAdmin: false,
       };
-      localStorage.setItem("user", JSON.stringify(normalUser));
+      sessionStorage.setItem("user", JSON.stringify(normalUser));
       setUser(normalUser);
       dispatch(favoritesActions.setUser(email));
       navigate("/");
@@ -61,10 +60,11 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // ✅ Register function
   const register = ({ name, email, password, num }) => {
     const users = JSON.parse(localStorage.getItem("users")) || [];
-
     const userExists = users.find((u) => u.email === email);
+
     if (userExists) {
       alert("❌ Cet email est déjà utilisé");
       return;
@@ -87,21 +87,22 @@ export const AuthProvider = ({ children }) => {
       isAdmin: false,
     };
 
-    localStorage.setItem("user", JSON.stringify(userToLogin));
+    sessionStorage.setItem("user", JSON.stringify(userToLogin));
     setUser(userToLogin);
     dispatch(favoritesActions.setUser(email));
     navigate("/");
   };
 
+  // ✅ Logout function
   const logout = () => {
+    sessionStorage.removeItem("user");
     setUser(null);
-    localStorage.removeItem("user");
-    dispatch(favoritesActions.setUser(null)); // Clear favorite link
+    dispatch(favoritesActions.setUser(null));
     navigate("/login");
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, register }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, register }}>
       {children}
     </AuthContext.Provider>
   );

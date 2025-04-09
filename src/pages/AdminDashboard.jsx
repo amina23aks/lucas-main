@@ -9,7 +9,8 @@ const AdminDashboard = () => {
     const favoritesKeys = allKeys.filter((key) => key.startsWith("favorites_"));
 
     const usersData = favoritesKeys.map((key) => {
-      const email = key.replace("favorites_", "");
+      const encodedEmail = key.replace("favorites_", "");
+      const email = decodeURIComponent(encodedEmail); // ✅ fixed here
       const favorites = JSON.parse(localStorage.getItem(key));
       return { email, favorites };
     });

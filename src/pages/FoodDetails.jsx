@@ -18,10 +18,11 @@ const FoodDetails = () => {
   const [reviewMsg, setReviewMsg] = useState("");
   const [emailError, setEmailError] = useState("");
   const [notLoggedInError, setNotLoggedInError] = useState("");
+  const [notification, setNotification] = useState(""); // ✅ Notification state
 
   const dispatch = useDispatch();
   const { id } = useParams();
-  const { user } = useAuth(); // ✅ Auth info
+  const { user } = useAuth();
 
   useEffect(() => {
     const localData = JSON.parse(localStorage.getItem("products")) || [];
@@ -56,6 +57,8 @@ const FoodDetails = () => {
 
   const toggleFavorite = () => {
     dispatch(favoritesActions.addFavorite({ id, title, price, image01 }));
+    setNotification("✅ Produit ajouté aux favoris !");
+    setTimeout(() => setNotification(""), 3000);
   };
 
   const submitHandler = (e) => {
@@ -87,7 +90,6 @@ const FoodDetails = () => {
     const existing = JSON.parse(localStorage.getItem("comments")) || [];
     localStorage.setItem("comments", JSON.stringify([...existing, comment]));
 
-    // Clear form
     setEnteredName("");
     setEnteredEmail("");
     setReviewMsg("");
@@ -132,6 +134,13 @@ const FoodDetails = () => {
           {/* Info */}
           <Col lg="6" md="6">
             <div className="single__product-content">
+              {/* ✅ Notification */}
+              {notification && (
+                <div className="notification-banner mb-3">
+                  {notification}
+                </div>
+              )}
+
               <h2 className="product__title mb-3">{title}</h2>
               <p className="product__price">
                 Prix: <span>{price} DA</span>
@@ -211,7 +220,7 @@ const FoodDetails = () => {
             )}
           </Col>
 
-          {/* Related */}
+          {/* Related Products */}
           <Col lg="12" className="mb-5 mt-4">
             <h2 className="related__Product-title">Vous aimerez aussi</h2>
           </Col>

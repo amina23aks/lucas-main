@@ -1,3 +1,32 @@
+.notification-banner {
+  background-color: #d1e7dd;
+  color: #0f5132;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid #badbcc;
+  font-size: 14px;
+  animation: fadeInOut 3s ease-in-out forwards;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+
 .error-message {
   color: red;
   font-size: 0.9rem;
